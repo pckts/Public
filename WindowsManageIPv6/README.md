@@ -9,4 +9,6 @@ additionally it is also able to clean up and restore pre-deployment functionalit
 #--------------
 
 To do:
+
 2. make successful exit codes as pretty as errors
+3. self-create all source files
