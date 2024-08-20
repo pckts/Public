@@ -1,0 +1,20 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "anyOf": [
+        {
+          "field": "",
+          "equals": ""
+        },
+        {
+          "field": "",
+          "notEquals": ""
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  }
+}
