@@ -1,7 +1,7 @@
 # Windows-ManageIPv6
 
 This contains the full functionality of the legacy version:
-https://github.com/pckts/Windows-DisableIPv6
+https://github.com/pckts/Archive/Windows-DisableIPv6
 
 additionally it is also able to clean up and restore pre-deployment functionality post-deployment
 
