@@ -591,8 +591,8 @@ Function Windows-DisableIPv6
     }
     
     #Create folder structure to be used
-    $FolderExist = Test-Path -Path C:\Windows-DisableIPv6
-    if ($FolderExist -ne $true)
+    $DisableFolderExist = Test-Path -Path C:\Windows-DisableIPv6
+    if ($DisableFolderExist -ne $true)
     {
         New-Item -ItemType "directory" -Path C:\Windows-DisableIPv6 -Erroraction Stop
         sleep 1
@@ -606,12 +606,13 @@ Function Windows-DisableIPv6
         sleep 1
         Remove-SmbShare -Name "Windows-DisableIPv6" -Force -Erroraction SilentlyContinue
         Remove-Item -LiteralPath "C:\Windows-DisableIPv6" -Force -Recurse -Erroraction SilentlyContinue
+        sleep 1
         New-Item -ItemType "directory" -Path C:\Windows-DisableIPv6 -Erroraction Stop
         clear-host
     }
 
-    $ReportFolderExist = Test-Path -Path C:\Windows-DisableIPv6_Reports
-    if ($FolderExist -ne $true)
+    $DisableReportFolderExist = Test-Path -Path C:\Windows-DisableIPv6_Reports
+    if ($DisableReportFolderExist -ne $true)
     {
         New-Item -ItemType "directory" -Path C:\Windows-DisableIPv6_Reports -Erroraction Stop
         sleep 1
@@ -732,18 +733,19 @@ Function Windows-DisableIPv6
     Stop-Transcript
     $psISE.CurrentFile.SaveAS("$home\Temp_Windows-ManageIPv6")
     Remove-Item -LiteralPath "$home\Temp_Windows-ManageIPv6" -Force -Recurse -Erroraction SilentlyContinue
-    sleep 1
     clear-host
-    write-host "The group policy 'Windows-DisableIPv6' has now been deployed"
+    sleep 1
     write-host ""
-    write-host "It will automatically be deleted in 2 weeks to allow for re-use of IPv6."
-    write-host "The 'Windows-DisableIPv6_Reports' folder will be kept intact"
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host " SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! " -ForeGroundColor DarkGreen -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "           The Group Policy 'Windows-DisableIPv6' has now been deployed           " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                      The policy will self-delete in 2 weeks                      " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "                         This shell will self-terminate                           " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
     write-host ""
-    write-host ""
-    write-host "Developer Log: $DevLogOutput" -ForegroundColor DarkGray
-    write-host ""
-    write-host ""
-    write-host "This ISE will forcefully close itself in 10 seconds"
+    write-host "Developer Log: $DevLogOutput" -ForeGroundColor Gray -BackGroundColor Black
     write-host ""
     sleep 10
     exit
@@ -764,8 +766,8 @@ Function Windows-RestoreIPv6
     }
 
     #Create folder structure to be used
-    $FolderExist = Test-Path -Path C:\Windows-RestoreIPv6
-    if ($FolderExist -ne $true)
+    $RestoreFolderExist = Test-Path -Path C:\Windows-RestoreIPv6
+    if ($RestoreFolderExist -ne $true)
     {
         New-Item -ItemType "directory" -Path C:\Windows-RestoreIPv6 -Erroraction Stop
         sleep 1
@@ -787,8 +789,8 @@ Function Windows-RestoreIPv6
         clear-host
     }
 
-    $ReportFolderExist = Test-Path -Path C:\Windows-RestoreIPv6_Reports
-    if ($FolderExist -ne $true)
+    $RestoreReportFolderExist = Test-Path -Path C:\Windows-RestoreIPv6_Reports
+    if ($RestoreReportFolderExist -ne $true)
     {
         New-Item -ItemType "directory" -Path C:\Windows-RestoreIPv6_Reports -Erroraction Stop
         sleep 1
@@ -802,6 +804,7 @@ Function Windows-RestoreIPv6
         sleep 1
         Remove-SmbShare -Name "Windows-RestoreIPv6_Reports" -Force -Erroraction SilentlyContinue
         Remove-Item -LiteralPath "C:\Windows-RestoreIPv6_Reports" -Force -Recurse -Erroraction SilentlyContinue
+        sleep 1
         New-Item -ItemType "directory" -Path C:\Windows-RestoreIPv6_Reports -Erroraction Stop
         clear-host
     }
@@ -905,18 +908,19 @@ Function Windows-RestoreIPv6
     Stop-Transcript
     $psISE.CurrentFile.SaveAS("$home\Temp_Windows-ManageIPv6")
     Remove-Item -LiteralPath "$home\Temp_Windows-ManageIPv6" -Force -Recurse -Erroraction SilentlyContinue
-    sleep 1
     clear-host
-    write-host "The group policy 'Windows-RestoreIPv6' has now been deployed"
+    sleep 1
     write-host ""
-    write-host "It will automatically be deleted in 8 weeks to minimise group policy clutter"
-    write-host "The 'Windows-RestoreIPv6_Reports' folder will be kept intact then"
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host " SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! " -ForeGroundColor DarkGreen -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "           The Group Policy 'Windows-RestoreIPv6' has now been deployed           " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                      The policy will self-delete in 8 weeks                      " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "                         This shell will self-terminate                           " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
     write-host ""
-    write-host ""
-    write-host "Developer Log: $DevLogOutput" -ForegroundColor DarkGray
-    write-host ""
-    write-host ""
-    write-host "This ISE will forcefully close itself in 10 seconds"
+    write-host "Developer Log: $DevLogOutput" -ForeGroundColor Gray -BackGroundColor Black
     write-host ""
     sleep 10
     exit
@@ -940,15 +944,19 @@ Function Windows-HousekeepingIPv6
     Stop-Transcript
     $psISE.CurrentFile.SaveAS("$home\Temp_Windows-ManageIPv6")
     Remove-Item -LiteralPath "$home\Temp_Windows-ManageIPv6" -Force -Recurse -Erroraction SilentlyContinue
-    sleep 1
     clear-host
-    write-host "All parts of both Windows-DisableIPv6 and Windows-RestoreIPv6 have been removed from this environment"
+    sleep 1
     write-host ""
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host " SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! SUCCESS! " -ForeGroundColor DarkGreen -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "         Any previous implementations of either DisableIPv6 or RestoreIPv6        " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                 have now been completely removed from this server                " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
+    write-host "                         This shell will self-terminate                           " -ForeGroundColor Yellow -BackGroundColor Black
+    write-host "                                                                                  " -BackGroundColor Black
     write-host ""
-    write-host "Developer Log: $DevLogOutput" -ForegroundColor DarkGray
-    write-host ""
-    write-host ""
-    write-host "This ISE will forcefully close itself in 10 seconds"
+    write-host "Developer Log: $DevLogOutput" -ForeGroundColor Gray -BackGroundColor Black
     write-host ""
     sleep 10
     exit
@@ -956,8 +964,8 @@ Function Windows-HousekeepingIPv6
 
 $FunctionMenu = 
 {
-    sleep 1
     cls
+    sleep 1
     write-host ""
     write-host "                                        " -BackGroundColor Black -NoNewLine; write-host "Windows-ManageIPv6" -ForeGroundColor Red -BackGroundColor Black -NoNewLine; write-host "                                         " -BackGroundColor Black
     write-host "                                                                                                   " -BackGroundColor Black
