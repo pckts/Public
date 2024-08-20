@@ -139,7 +139,7 @@ Stop-Transcript
 break
 '@
 
-$DisableScript = @'
+$RestoreScript = @'
 #Windows-RestoreIPv6
 
 #Relevance trigger, if file is not found, script will not run
@@ -243,7 +243,7 @@ $gpreportXML = @'
     <Identifier xmlns="http://www.microsoft.com/GroupPolicy/Types">{37A336B4-5593-4167-AC4C-D3DA0FC4A42F}</Identifier>
     <Domain xmlns="http://www.microsoft.com/GroupPolicy/Types">domain.local</Domain>
   </Identifier>
-  <Name>Windows-ManageIPv6</Name>
+  <Name>Windows-DisableIPv6</Name>
   <IncludeComments>true</IncludeComments>
   <CreatedTime>2024-08-15T14:35:15</CreatedTime>
   <ModifiedTime>2024-08-15T14:38:26</ModifiedTime>
@@ -626,6 +626,7 @@ Function Windows-DisableIPv6
         Remove-SmbShare -Name "Windows-DisableIPv6_Reports" -Force -Erroraction SilentlyContinue
         Copy-Item -Path "C:\Windows-DisableIPv6_Reports" -Destination "C:\Windows-DisableIPv6_Reports2" -Recurse
         Remove-Item -LiteralPath "C:\Windows-DisableIPv6_Reports" -Force -Recurse -Erroraction SilentlyContinue
+        sleep 1
         New-Item -ItemType "directory" -Path C:\Windows-DisableIPv6_Reports -Erroraction Stop
         Copy-Item -Path "C:\Windows-DisableIPv6_Reports2\*" -Destination "C:\Windows-DisableIPv6_Reports" -Recurse -Erroraction SilentlyContinue
         Remove-Item -LiteralPath "C:\Windows-DisableIPv6_Reports2" -Force -Recurse -Erroraction SilentlyContinue
@@ -643,12 +644,12 @@ Function Windows-DisableIPv6
     New-Item -Path "C:\Windows-DisableIPv6\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks" -ItemType Directory
 
     #Create source XML files
-    $backupXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\Backup.xml"
-    $bkupinfoXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\bkupInfo.xml"
-    $gpreportXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\gpreport.xml"
-    $gposcheduledtaskDisableXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml"
+    $backupXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\Backup.xml" -Encoding UTF8
+    $bkupinfoXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\bkupInfo.xml" -Encoding UTF8
+    $gpreportXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\gpreport.xml" -Encoding UTF8
+    $gposcheduledtaskDisableXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml" -Encoding UTF8
     $WMIFilterMOF | out-file "$ShareLocalPath\GPOSourceFilesDisable\IPv6WMIFilter.mof"
-    $CleanupDisableXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\Cleanup_Windows-DisableIPv6.xml"
+    $CleanupDisableXML | out-file "$ShareLocalPath\GPOSourceFilesDisable\Cleanup_Windows-DisableIPv6.xml" -Encoding UTF8
     $DisableScript  | out-file "$ShareLocalPath\Windows-DisableIPv6.ps1"
 
     #Replaces the placeholder in the XML for the scheduled cleanup task with runtime 2 weeks in the future
@@ -710,6 +711,7 @@ Function Windows-DisableIPv6
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+    $GPOAttributes = Get-GPO $GPOName
 
     #Verifies that the WMI filter was actually applied to the GPO
     if ($null -eq $GPOAttributes.WmiFilter.Name)
@@ -778,6 +780,7 @@ Function Windows-RestoreIPv6
         Remove-SmbShare -Name "Windows-RestoreIPv6_Reports" -Force -Erroraction SilentlyContinue
         Copy-Item -Path "C:\Windows-RestoreIPv6_Reports" -Destination "C:\Windows-RestoreIPv6_Reports2" -Recurse
         Remove-Item -LiteralPath "C:\Windows-RestoreIPv6_Reports" -Force -Recurse -Erroraction SilentlyContinue
+        sleep 1
         New-Item -ItemType "directory" -Path C:\Windows-DisableIPv6_Reports -Erroraction Stop
         Copy-Item -Path "C:\Windows-RestoreIPv6_Reports2\*" -Destination "C:\Windows-RestoreIPv6_Reports" -Recurse -Erroraction SilentlyContinue
         Remove-Item -LiteralPath "C:\Windows-RestoreIPv6_Reports2" -Force -Recurse -Erroraction SilentlyContinue
@@ -814,13 +817,13 @@ Function Windows-RestoreIPv6
     New-Item -Path "C:\Windows-RestoreIPv6\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks" -ItemType Directory
 
     #Create source XML files
-    $backupXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\Backup.xml"
-    $bkupinfoXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\bkupInfo.xml"
-    $gpreportXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\gpreport.xml"
-    $gposcheduledtaskRestoreXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml"
+    $backupXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\Backup.xml" -Encoding UTF8
+    $bkupinfoXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\bkupInfo.xml" -Encoding UTF8
+    $gpreportXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\gpreport.xml" -Encoding UTF8
+    $gposcheduledtaskRestoreXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\{B4BA155A-AB98-4943-9610-328DD1EA1C37}\DomainSysvol\GPO\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml" -Encoding UTF8
     $WMIFilterMOF | out-file "$ShareLocalPath\GPOSourceFilesRestore\IPv6WMIFilter.mof"
-    $CleanupRestoreXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\Cleanup_Windows-RestoreIPv6.xml"
-    $RestoreScript  | out-file "$ShareLocalPath\Windows-RestoreIPv6.ps1"
+    $CleanupRestoreXML | out-file "$ShareLocalPath\GPOSourceFilesRestore\Cleanup_Windows-RestoreIPv6.xml" -Encoding UTF8
+    $RestoreScript | out-file "$ShareLocalPath\Windows-RestoreIPv6.ps1"
 
     #Replaces the placeholder in the XML for the scheduled cleanup task with runtime 2 weeks in the future
     $DatePlaceholderToReplace = "QQQQ-QQ-QQ"
@@ -881,6 +884,7 @@ Function Windows-RestoreIPv6
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+    $GPOAttributes = Get-GPO $GPOName
 
     #Verifies that the WMI filter was actually applied to the GPO
     if ($null -eq $GPOAttributes.WmiFilter.Name)
