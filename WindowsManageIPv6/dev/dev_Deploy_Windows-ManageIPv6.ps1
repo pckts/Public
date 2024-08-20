@@ -154,6 +154,12 @@ Function Windows-DisableIPv6
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
 
+    #Verifies that the WMI filter was actually applied to the GPO
+    if ($null -eq $GPOAttributes.WmiFilter.Name)
+    {
+        throw "The WMI Filter was not properly applied to the Group Policy Object"
+    }
+
     #Creates cleanup task that will automatically remove the GPO in 2 weeks from date of implementation
     $taskExists = $taskExists = Get-ScheduledTask -TaskName "Cleanup_Windows-DisableIPv6" -ErrorAction SilentlyContinue
     if ($taskExists -eq $null)
@@ -312,6 +318,12 @@ Function Windows-RestoreIPv6
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+
+    #Verifies that the WMI filter was actually applied to the GPO
+    if ($null -eq $GPOAttributes.WmiFilter.Name)
+    {
+        throw "The WMI Filter was not properly applied to the Group Policy Object"
+    }
 
     #Creates cleanup task that will automatically remove the GPO in 2 weeks from date of implementation
     $taskExists = Get-ScheduledTask -TaskName "Cleanup_Windows-RestoreIPv6" -Erroraction SilentlyContinue
