@@ -635,7 +635,7 @@ Function Windows-DisableIPv6
     }
 
     #Shares the folder
-    sleep 3
+    sleep 1
     New-SmbShare -Name "Windows-DisableIPv6" -Path "C:\Windows-DisableIPv6" -ReadAccess "Everyone" -Erroraction Stop
     New-SmbShare -Name "Windows-DisableIPv6_Reports" -Path "C:\Windows-DisableIPv6_Reports" -ChangeAccess "Everyone" -Erroraction Stop
     $hostname = hostname
@@ -813,7 +813,7 @@ Function Windows-RestoreIPv6
     }
 
     #Shares the folder
-    sleep 3
+    sleep 1
     New-SmbShare -Name "Windows-RestoreIPv6" -Path "C:\Windows-RestoreIPv6" -ReadAccess "Everyone" -ErrorAction Stop
     New-SmbShare -Name "Windows-RestoreIPv6_Reports" -Path "C:\Windows-RestoreIPv6_Reports" -ChangeAccess "Everyone" -Erroraction Stop
     $hostname = hostname
