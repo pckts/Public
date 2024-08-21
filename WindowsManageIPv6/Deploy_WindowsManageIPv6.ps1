@@ -713,7 +713,9 @@ Function Windows-DisableIPv6
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+    sleep 2
     $GPOAttributes = Get-GPO $GPOName
+    sleep 1
 
     #Verifies that the WMI filter was actually applied to the GPO
     if ($null -eq $GPOAttributes.WmiFilter.Name)
@@ -811,6 +813,7 @@ Function Windows-RestoreIPv6
     }
 
     #Shares the folder
+    sleep 3
     New-SmbShare -Name "Windows-RestoreIPv6" -Path "C:\Windows-RestoreIPv6" -ReadAccess "Everyone" -ErrorAction Stop
     New-SmbShare -Name "Windows-RestoreIPv6_Reports" -Path "C:\Windows-RestoreIPv6_Reports" -ChangeAccess "Everyone" -Erroraction Stop
     $hostname = hostname
@@ -888,8 +891,10 @@ Function Windows-RestoreIPv6
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+    sleep 2
     $GPOAttributes = Get-GPO $GPOName
-
+    sleep 1
+    
     #Verifies that the WMI filter was actually applied to the GPO
     if ($null -eq $GPOAttributes.WmiFilter.Name)
     {
