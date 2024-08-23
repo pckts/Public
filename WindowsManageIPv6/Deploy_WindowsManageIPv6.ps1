@@ -712,7 +712,7 @@ Function Windows-DisableIPv6
     $WMIFilter = Get-ADObject -Filter 'msWMI-Name -eq $WMIFilterDisplayName'
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
-    Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
+    Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction SilentlyContinue
     sleep 2
     $GPOAttributes = Get-GPO $GPOName
     sleep 1
