@@ -699,6 +699,7 @@ Function Windows-DisableIPv6
         New-GPLink -Name $GPOName -Target $DisabledInheritance.Path -Erroraction SilentlyContinue
         Set-GPLink -Name $GPOName -Enforced Yes -Target $DisabledInheritance.Path -Erroraction SilentlyContinue
     }
+    sleep 1
 
     #Links the WMI filter to the GPO
     $DomainDn = "DC=" + [String]::Join(",DC=", $RealDomain.Split("."))
@@ -712,6 +713,7 @@ Function Windows-DisableIPv6
     $WMIFilter = Get-ADObject -Filter 'msWMI-Name -eq $WMIFilterDisplayName'
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
+    sleep 1
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction SilentlyContinue
     sleep 2
     $GPOAttributes = Get-GPO $GPOName
@@ -891,6 +893,7 @@ Function Windows-RestoreIPv6
     $WMIFilter = Get-ADObject -Filter 'msWMI-Name -eq $WMIFilterDisplayName'
     $GPODN = "CN={" + $GPOAttributes.Id + "}," + $GPOContainer
     $WMIFilterLinkValue = "[$RealDomain;" + $WMIFilter.Name + ";0]"
+    sleep 1
     Set-ADObject $GPODN -Add @{gPCWQLFilter=$WMIFilterLinkValue} -Erroraction Stop
     sleep 2
     $GPOAttributes = Get-GPO $GPOName
