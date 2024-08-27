@@ -877,6 +877,7 @@ Function Windows-RestoreIPv6
         New-GPLink -Name $GPOName -Target $DisabledInheritance.Path -Erroraction SilentlyContinue
         Set-GPLink -Name $GPOName -Enforced Yes -Target $DisabledInheritance.Path -Erroraction SilentlyContinue
     }
+    sleep 1
 
     #Links the WMI filter to the GPO
     $DomainDn = "DC=" + [String]::Join(",DC=", $RealDomain.Split("."))
