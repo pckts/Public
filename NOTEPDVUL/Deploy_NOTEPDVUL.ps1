@@ -26,7 +26,6 @@ if ($IsDC.ProductType -ne "2")
   sleep 1
   break
 }
-Stop-Transcript
 
 #Defines the source script file
 $DetectScript = @'
@@ -91,28 +90,35 @@ if ((Test-Path $NotepadPlusPlusPath64) -or (Test-Path $NotepadPlusPlusPath32)) {
 break
 '@
 
- 
+
 #Create folder structure to be used
-$NOTEPDVULFolderExist = Test-Path -Path C:\itm8\NOTEPDVUL
-if ($NOTEPDVULFolderExist -ne $true)
-{
-    $itm8FolderExist = Test-Path -Path C:\itm8
-    if ($itm8FolderExist -ne $true)
+    $NOTEPDVULFolderExist = Test-Path -Path C:\itm8\NOTEPDVUL
+    if ($NOTEPDVULFolderExist -ne $true)
     {
-        New-Item -ItemType "directory" -Path C:\itm8 -Erroraction Stop
+        $itm8FolderExist = Test-Path -Path C:\itm8
+        if ($itm8FolderExist -ne $true)
+        {
+            New-Item -ItemType "directory" -Path C:\itm8 -Erroraction Stop
+            sleep 1
+        }
+        New-Item -ItemType "directory" -Path C:\itm8\NOTEPDVUL -Erroraction Stop
+        sleep 1
+        New-Item -ItemType "directory" -Path C:\itm8\NOTEPDVUL\Detected -Erroraction Stop
+        sleep 1
+        New-Item -ItemType "directory" -Path C:\itm8\NOTEPDVUL\Not_Detected -Erroraction Stop
         sleep 1
     }
-    New-Item -ItemType "directory" -Path C:\itm8\NOTEPDVUL -Erroraction Stop
-    sleep 1
-}
 
-#Shares the folder
-sleep 1
-New-SmbShare -Name "NOTEPDVUL" -Path "C:\itm8\NOTEPDVUL" -ReadAccess "Everyone" -Erroraction Stop
-$hostname = hostname
-$ShareLocalPath = "C:\itm8\NOTEPDVUL"
-$DetectScript  | out-file "$ShareLocalPath\NOTEPDVUL.ps1"
-#Replaces the placerholder sharepath in the active script
-$PlaceholderToReplace2 = "QZQZQPLACEHOLDERQZQZQ2"
-$ScriptPath = "$ShareLocalPath\NOTEPDVUL.ps1"
-(Get-Content -path $ScriptPath -Raw) -replace $PlaceholderToReplace2,$hostname | Set-Content -Path $ScriptPath -Erroraction Stop
+    #Shares the folder
+    sleep 1
+    New-SmbShare -Name "NOTEPDVUL" -Path "C:\itm8\NOTEPDVUL" -ReadAccess "Everyone" -Erroraction Stop
+    $hostname = hostname
+    $ShareLocalPath = "C:\itm8\NOTEPDVUL"
+
+    #Create script file
+    $DetectScript  | out-file "$ShareLocalPath\NOTEPDVUL.ps1"
+
+    #Replaces the placerholder sharepath in the active script
+    $PlaceholderToReplace2 = "QZQZQPLACEHOLDERQZQZQ2"
+    $ScriptPath = "$ShareLocalPath\NOTEPDVUL.ps1"
+    (Get-Content -path $ScriptPath -Raw) -replace $PlaceholderToReplace2,$hostname | Set-Content -Path $ScriptPath -Erroraction Stop
